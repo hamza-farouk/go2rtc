@@ -30,7 +30,8 @@ type Conn struct {
 	SessionName string
 	Timeout     int
 	Transport   string // custom transport support, ex. RTSP over WebSocket
-
+	ForceSprop bool
+	
 	URL *url.URL
 
 	// internal

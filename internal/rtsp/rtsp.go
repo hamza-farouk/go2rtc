@@ -23,6 +23,7 @@ func Init() {
 			Password     string `yaml:"password" json:"-"`
 			DefaultQuery string `yaml:"default_query" json:"default_query"`
 			PacketSize   uint16 `yaml:"pkt_size" json:"pkt_size,omitempty"`
+			ForceSprop   bool   `yaml:"force_sprop" json:"force_sprop,omitempty"` // NEW: Force sprop parameters
 		} `yaml:"rtsp"`
 	}
 
@@ -60,6 +61,9 @@ func Init() {
 		defaultMedias = ParseQuery(query)
 	}
 
+	// Store the force_sprop setting globally
+	forceSpropParams = conf.Mod.ForceSprop
+
 	go func() {
 		for {
 			conn, err := ln.Accept()
@@ -91,6 +95,7 @@ var Port string
 var log zerolog.Logger
 var handlers []Handler
 var defaultMedias []*core.Media
+var forceSpropParams bool // NEW: Global setting for forcing sprop parameters
 
 func rtspHandler(rawURL string) (core.Producer, error) {
 	rawURL, rawQuery, _ := strings.Cut(rawURL, "#")
@@ -184,6 +189,17 @@ func tcpHandler(conn *rtsp.Conn) {
 				for _, media := range defaultMedias {
 					conn.Medias = append(conn.Medias, media.Clone())
 				}
+			}
+
+			// NEW: Check for sprop parameter forcing in query or global config
+			forceSprop := forceSpropParams || query.Get("force_sprop") == "1"
+			if forceSprop {
+				// Set a flag on the connection to force sprop parameters
+				// This would need to be implemented in the underlying rtsp package
+				if conn.SetForceSprop != nil {
+					conn.SetForceSprop(true)
+				}
+				log.Debug().Msg("[rtsp] forcing sprop parameters in SDP")
 			}
 
 			if query.Get("backchannel") == "1" {

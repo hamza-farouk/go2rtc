@@ -2,6 +2,7 @@ package rtsp
 
 import (
 	"bufio"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"net"
@@ -31,6 +32,127 @@ func NewServer(conn net.Conn) *Conn {
 func (c *Conn) Auth(username, password string) {
 	info := url.UserPassword(username, password)
 	c.auth = tcp.NewAuth(info)
+}
+
+// extractSPSPPS extracts SPS and PPS from H.264 codec data
+func extractSPSPPS(codec *core.Codec) (sps, pps []byte) {
+	if codec.Name != core.CodecH264 || codec.FmtpLine == "" {
+		return nil, nil
+	}
+
+	// Look for existing sprop-parameter-sets
+	if strings.Contains(codec.FmtpLine, "sprop-parameter-sets=") {
+		// Already has sprop parameters
+		return nil, nil
+	}
+
+	// Try to extract from codec data if available
+	if len(codec.Data) < 8 {
+		return nil, nil
+	}
+
+	data := codec.Data
+	
+	// Check if this is an AVCDecoderConfigurationRecord
+	if len(data) > 6 && data[0] == 0x01 {
+		// AVCDecoderConfigurationRecord format
+		spsLen := int(data[6]&0x1F)
+		if len(data) < 8+spsLen*2 {
+			return nil, nil
+		}
+		
+		pos := 8
+		for i := 0; i < spsLen && pos < len(data)-2; i++ {
+			length := int(data[pos])<<8 | int(data[pos+1])
+			pos += 2
+			if pos+length > len(data) {
+				break
+			}
+			if i == 0 { // First SPS
+				sps = data[pos : pos+length]
+			}
+			pos += length
+		}
+		
+		if pos < len(data)-1 {
+			ppsLen := int(data[pos])
+			pos++
+			for i := 0; i < ppsLen && pos < len(data)-2; i++ {
+				length := int(data[pos])<<8 | int(data[pos+1])
+				pos += 2
+				if pos+length > len(data) {
+					break
+				}
+				if i == 0 { // First PPS
+					pps = data[pos : pos+length]
+				}
+				pos += length
+			}
+		}
+	}
+
+	return sps, pps
+}
+
+// addSpropParameters adds sprop-parameter-sets to H.264 codec if missing
+func addSpropParameters(codec *core.Codec, forceSprop bool) {
+	if codec.Name != core.CodecH264 {
+		return
+	}
+
+	// Skip if already has sprop parameters and not forcing
+	if strings.Contains(codec.FmtpLine, "sprop-parameter-sets=") && !forceSprop {
+		return
+	}
+
+	sps, pps := extractSPSPPS(codec)
+	if sps == nil || pps == nil {
+		// Try to use default parameters for common profiles
+		// This is a fallback - ideally we'd extract from actual stream data
+		if forceSprop {
+			// Default H.264 Baseline profile parameters (you may need to adjust these)
+			spsB64 := "Z0IAKpY1QPAET8s3AQEBAg=="  // Common baseline SPS
+			ppsB64 := "aM48gA=="                   // Common baseline PPS
+			
+			spropParams := fmt.Sprintf("sprop-parameter-sets=%s,%s", spsB64, ppsB64)
+			
+			if codec.FmtpLine == "" {
+				codec.FmtpLine = spropParams
+			} else if !strings.Contains(codec.FmtpLine, "sprop-parameter-sets=") {
+				codec.FmtpLine += "; " + spropParams
+			}
+		}
+		return
+	}
+
+	// Encode SPS and PPS to base64
+	spsB64 := base64.StdEncoding.EncodeToString(sps)
+	ppsB64 := base64.StdEncoding.EncodeToString(pps)
+	
+	spropParams := fmt.Sprintf("sprop-parameter-sets=%s,%s", spsB64, ppsB64)
+	
+	if codec.FmtpLine == "" {
+		codec.FmtpLine = spropParams
+	} else if !strings.Contains(codec.FmtpLine, "sprop-parameter-sets=") {
+		codec.FmtpLine += "; " + spropParams
+	} else if forceSprop {
+		// Replace existing sprop parameters
+		// Remove existing sprop-parameter-sets
+		parts := strings.Split(codec.FmtpLine, ";")
+		var newParts []string
+		for _, part := range parts {
+			part = strings.TrimSpace(part)
+			if !strings.HasPrefix(part, "sprop-parameter-sets=") {
+				newParts = append(newParts, part)
+			}
+		}
+		codec.FmtpLine = strings.Join(newParts, "; ")
+		if codec.FmtpLine == "" {
+			codec.FmtpLine = spropParams
+		} else {
+			codec.FmtpLine += "; " + spropParams
+		}
+	}
 }
 
 func (c *Conn) Accept() error {
@@ -124,23 +246,53 @@ func (c *Conn) Accept() error {
 				Request: req,
 			}
 
+			// Check if sprop parameters should be forced
+			// This could be set via a flag on the connection or from URL params
+			forceSprop := c.ForceSprop || (req.URL != nil && req.URL.Query().Get("force_sprop") == "1")
+
 			// convert tracks to real output medias medias
 			var medias []*core.Media
 			for i, track := range c.Senders {
+				// Clone the codec to avoid modifying the original
+				codec := &core.Codec{
+					Name:        track.Codec.Name,
+					ClockRate:   track.Codec.ClockRate,
+					Channels:    track.Codec.Channels,
+					FmtpLine:    track.Codec.FmtpLine,
+					PayloadType: track.Codec.PayloadType,
+					Data:        track.Codec.Data,
+				}
+				
+				// Add sprop parameters for H.264 if needed
+				addSpropParameters(codec, forceSprop)
+				
 				media := &core.Media{
 					Kind:      core.GetKind(track.Codec.Name),
 					Direction: core.DirectionRecvonly,
-					Codecs:    []*core.Codec{track.Codec},
+					Codecs:    []*core.Codec{codec},
 					ID:        "trackID=" + strconv.Itoa(i),
 				}
 				medias = append(medias, media)
 			}
 
 			for i, track := range c.Receivers {
+				// Clone the codec to avoid modifying the original
+				codec := &core.Codec{
+					Name:        track.Codec.Name,
+					ClockRate:   track.Codec.ClockRate,
+					Channels:    track.Codec.Channels,
+					FmtpLine:    track.Codec.FmtpLine,
+					PayloadType: track.Codec.PayloadType,
+					Data:        track.Codec.Data,
+				}
+				
+				// Add sprop parameters for H.264 if needed
+				addSpropParameters(codec, forceSprop)
+				
 				media := &core.Media{
 					Kind:      core.GetKind(track.Codec.Name),
 					Direction: core.DirectionSendonly,
-					Codecs:    []*core.Codec{track.Codec},
+					Codecs:    []*core.Codec{codec},
 					ID:        "trackID=" + strconv.Itoa(i+len(c.Senders)),
 				}
 				medias = append(medias, media)

@@ -1,4 +1,4 @@
-module github.com/AlexxIT/go2rtc
+module github.com/hamza-farouk/go2rtc
 
 go 1.23.0
 

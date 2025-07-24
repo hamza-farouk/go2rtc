@@ -3,9 +3,9 @@ package mpegts
 import (
 	"net/http"
 
-	"github.com/AlexxIT/go2rtc/internal/api"
-	"github.com/AlexxIT/go2rtc/internal/streams"
-	"github.com/AlexxIT/go2rtc/pkg/aac"
+	"github.com/hamza-farouk/go2rtc/internal/api"
+	"github.com/hamza-farouk/go2rtc/internal/streams"
+	"github.com/hamza-farouk/go2rtc/pkg/aac"
 )
 
 func apiStreamAAC(w http.ResponseWriter, r *http.Request) {

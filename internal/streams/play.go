@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/AlexxIT/go2rtc/pkg/core"
+	"github.com/hamza-farouk/go2rtc/pkg/core"
 )
 
 func (s *Stream) Play(urlOrProd any) error {

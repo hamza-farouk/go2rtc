@@ -3,11 +3,11 @@ package magic
 import (
 	"io"
 
-	"github.com/AlexxIT/go2rtc/pkg/core"
-	"github.com/AlexxIT/go2rtc/pkg/h264"
-	"github.com/AlexxIT/go2rtc/pkg/h264/annexb"
-	"github.com/AlexxIT/go2rtc/pkg/h265"
-	"github.com/AlexxIT/go2rtc/pkg/mjpeg"
+	"github.com/hamza-farouk/go2rtc/pkg/core"
+	"github.com/hamza-farouk/go2rtc/pkg/h264"
+	"github.com/hamza-farouk/go2rtc/pkg/h264/annexb"
+	"github.com/hamza-farouk/go2rtc/pkg/h265"
+	"github.com/hamza-farouk/go2rtc/pkg/mjpeg"
 	"github.com/pion/rtp"
 )
 

@@ -3,8 +3,8 @@ package webrtc
 import (
 	"net/url"
 
-	"github.com/AlexxIT/go2rtc/pkg/core"
-	"github.com/AlexxIT/go2rtc/pkg/webrtc"
+	"github.com/hamza-farouk/go2rtc/pkg/core"
+	"github.com/hamza-farouk/go2rtc/pkg/webrtc"
 )
 
 func switchbotClient(rawURL string, query url.Values) (core.Producer, error) {

@@ -6,7 +6,7 @@ import (
 	"image"
 	"image/jpeg"
 
-	"github.com/AlexxIT/go2rtc/pkg/core"
+	"github.com/hamza-farouk/go2rtc/pkg/core"
 	"github.com/pion/rtp"
 )
 

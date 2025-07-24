@@ -3,8 +3,8 @@ package pcm
 import (
 	"errors"
 
-	"github.com/AlexxIT/go2rtc/pkg/core"
-	"github.com/AlexxIT/go2rtc/pkg/shell"
+	"github.com/hamza-farouk/go2rtc/pkg/core"
+	"github.com/hamza-farouk/go2rtc/pkg/shell"
 	"github.com/pion/rtp"
 )
 

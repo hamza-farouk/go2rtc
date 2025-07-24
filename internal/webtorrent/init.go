@@ -6,12 +6,12 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/AlexxIT/go2rtc/internal/api"
-	"github.com/AlexxIT/go2rtc/internal/app"
-	"github.com/AlexxIT/go2rtc/internal/streams"
-	"github.com/AlexxIT/go2rtc/internal/webrtc"
-	"github.com/AlexxIT/go2rtc/pkg/core"
-	"github.com/AlexxIT/go2rtc/pkg/webtorrent"
+	"github.com/hamza-farouk/go2rtc/internal/api"
+	"github.com/hamza-farouk/go2rtc/internal/app"
+	"github.com/hamza-farouk/go2rtc/internal/streams"
+	"github.com/hamza-farouk/go2rtc/internal/webrtc"
+	"github.com/hamza-farouk/go2rtc/pkg/core"
+	"github.com/hamza-farouk/go2rtc/pkg/webtorrent"
 	"github.com/rs/zerolog"
 )
 

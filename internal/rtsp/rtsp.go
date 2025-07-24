@@ -7,11 +7,11 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/AlexxIT/go2rtc/internal/app"
-	"github.com/AlexxIT/go2rtc/internal/streams"
-	"github.com/AlexxIT/go2rtc/pkg/core"
-	"github.com/AlexxIT/go2rtc/pkg/rtsp"
-	"github.com/AlexxIT/go2rtc/pkg/tcp"
+	"github.com/hamza-farouk/go2rtc/internal/app"
+	"github.com/hamza-farouk/go2rtc/internal/streams"
+	"github.com/hamza-farouk/go2rtc/pkg/core"
+	"github.com/hamza-farouk/go2rtc/pkg/rtsp"
+	"github.com/hamza-farouk/go2rtc/pkg/tcp"
 	"github.com/rs/zerolog"
 )
 

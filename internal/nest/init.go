@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/AlexxIT/go2rtc/internal/api"
-	"github.com/AlexxIT/go2rtc/internal/streams"
-	"github.com/AlexxIT/go2rtc/pkg/core"
-	"github.com/AlexxIT/go2rtc/pkg/nest"
+	"github.com/hamza-farouk/go2rtc/internal/api"
+	"github.com/hamza-farouk/go2rtc/internal/streams"
+	"github.com/hamza-farouk/go2rtc/pkg/core"
+	"github.com/hamza-farouk/go2rtc/pkg/nest"
 )
 
 func Init() {

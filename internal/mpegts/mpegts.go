@@ -3,9 +3,9 @@ package mpegts
 import (
 	"net/http"
 
-	"github.com/AlexxIT/go2rtc/internal/api"
-	"github.com/AlexxIT/go2rtc/internal/streams"
-	"github.com/AlexxIT/go2rtc/pkg/mpegts"
+	"github.com/hamza-farouk/go2rtc/internal/api"
+	"github.com/hamza-farouk/go2rtc/internal/streams"
+	"github.com/hamza-farouk/go2rtc/pkg/mpegts"
 )
 
 func Init() {

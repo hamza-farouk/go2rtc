@@ -9,7 +9,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/AlexxIT/go2rtc/pkg/core"
+	"github.com/hamza-farouk/go2rtc/pkg/core"
 	"github.com/AlexxIT/go2rtc/pkg/h264/annexb"
 	"github.com/pion/rtp"
 )

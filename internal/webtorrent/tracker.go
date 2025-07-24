@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/AlexxIT/go2rtc/pkg/webtorrent"
+	"github.com/hamza-farouk/go2rtc/pkg/webtorrent"
 	"github.com/gorilla/websocket"
 )
 

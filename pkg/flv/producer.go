@@ -7,10 +7,10 @@ import (
 	"io"
 	"time"
 
-	"github.com/AlexxIT/go2rtc/pkg/aac"
-	"github.com/AlexxIT/go2rtc/pkg/core"
-	"github.com/AlexxIT/go2rtc/pkg/h264"
-	"github.com/AlexxIT/go2rtc/pkg/h265"
+	"github.com/hamza-farouk/go2rtc/pkg/aac"
+	"github.com/hamza-farouk/go2rtc/pkg/core"
+	"github.com/hamza-farouk/go2rtc/pkg/h264"
+	"github.com/hamza-farouk/go2rtc/pkg/h265"
 	"github.com/pion/rtp"
 )
 

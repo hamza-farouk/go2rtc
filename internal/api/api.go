@@ -13,7 +13,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/AlexxIT/go2rtc/internal/app"
+	"github.com/hamza-farouk/go2rtc/internal/app"
 	"github.com/rs/zerolog"
 )
 

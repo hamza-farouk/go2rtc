@@ -3,7 +3,7 @@ package pcm
 import (
 	"math"
 
-	"github.com/AlexxIT/go2rtc/pkg/core"
+	"github.com/hamza-farouk/go2rtc/pkg/core"
 )
 
 func ceil(x float32) int {

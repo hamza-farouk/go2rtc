@@ -7,15 +7,15 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/AlexxIT/go2rtc/internal/api"
-	"github.com/AlexxIT/go2rtc/internal/app"
-	"github.com/AlexxIT/go2rtc/internal/srtp"
-	"github.com/AlexxIT/go2rtc/internal/streams"
-	"github.com/AlexxIT/go2rtc/pkg/core"
-	"github.com/AlexxIT/go2rtc/pkg/hap"
-	"github.com/AlexxIT/go2rtc/pkg/hap/camera"
-	"github.com/AlexxIT/go2rtc/pkg/homekit"
-	"github.com/AlexxIT/go2rtc/pkg/mdns"
+	"github.com/hamza-farouk/go2rtc/internal/api"
+	"github.com/hamza-farouk/go2rtc/internal/app"
+	"github.com/hamza-farouk/go2rtc/internal/srtp"
+	"github.com/hamza-farouk/go2rtc/internal/streams"
+	"github.com/hamza-farouk/go2rtc/pkg/core"
+	"github.com/hamza-farouk/go2rtc/pkg/hap"
+	"github.com/hamza-farouk/go2rtc/pkg/hap/camera"
+	"github.com/hamza-farouk/go2rtc/pkg/homekit"
+	"github.com/hamza-farouk/go2rtc/pkg/mdns"
 	"github.com/rs/zerolog"
 )
 
@@ -91,7 +91,7 @@ func Init() {
 			srv.hap.Handler = homekit.ProxyHandler(srv, dial)
 		} else {
 			// 2. Act as basic HomeKit camera
-			srv.accessory = camera.NewAccessory("AlexxIT", "go2rtc", name, "-", app.Version)
+			srv.accessory = camera.NewAccessory("hamza-farouk", "go2rtc", name, "-", app.Version)
 			srv.hap.Handler = homekit.ServerHandler(srv)
 		}
 

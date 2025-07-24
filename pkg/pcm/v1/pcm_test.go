@@ -3,7 +3,7 @@ package v1
 import (
 	"testing"
 
-	v2 "github.com/AlexxIT/go2rtc/pkg/pcm"
+	v2 "github.com/hamza-farouk/go2rtc/pkg/pcm"
 	"github.com/stretchr/testify/require"
 )
 

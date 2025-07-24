@@ -3,8 +3,8 @@ package mpegts
 import (
 	"encoding/binary"
 
-	"github.com/AlexxIT/go2rtc/pkg/bits"
-	"github.com/AlexxIT/go2rtc/pkg/h264/annexb"
+	"github.com/hamza-farouk/go2rtc/pkg/bits"
+	"github.com/hamza-farouk/go2rtc/pkg/h264/annexb"
 )
 
 type Muxer struct {

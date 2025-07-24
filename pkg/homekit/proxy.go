@@ -9,11 +9,11 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/AlexxIT/go2rtc/pkg/hap"
-	"github.com/AlexxIT/go2rtc/pkg/hap/camera"
-	"github.com/AlexxIT/go2rtc/pkg/hap/hds"
-	"github.com/AlexxIT/go2rtc/pkg/hap/secure"
-	"github.com/AlexxIT/go2rtc/pkg/hap/tlv8"
+	"github.com/hamza-farouk/go2rtc/pkg/hap"
+	"github.com/hamza-farouk/go2rtc/pkg/hap/camera"
+	"github.com/hamza-farouk/go2rtc/pkg/hap/hds"
+	"github.com/hamza-farouk/go2rtc/pkg/hap/secure"
+	"github.com/hamza-farouk/go2rtc/pkg/hap/tlv8"
 )
 
 func ProxyHandler(pair ServerPair, dial func() (net.Conn, error)) hap.HandlerFunc {

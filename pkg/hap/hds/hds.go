@@ -8,9 +8,9 @@ import (
 	"net"
 	"time"
 
-	"github.com/AlexxIT/go2rtc/pkg/hap/chacha20poly1305"
-	"github.com/AlexxIT/go2rtc/pkg/hap/hkdf"
-	"github.com/AlexxIT/go2rtc/pkg/hap/secure"
+	"github.com/hamza-farouk/go2rtc/pkg/hap/chacha20poly1305"
+	"github.com/hamza-farouk/go2rtc/pkg/hap/hkdf"
+	"github.com/hamza-farouk/go2rtc/pkg/hap/secure"
 )
 
 func Client(conn net.Conn, key []byte, salt string, controller bool) (*Conn, error) {

@@ -8,8 +8,8 @@ import (
 	"net"
 	"time"
 
-	"github.com/AlexxIT/go2rtc/pkg/hap/chacha20poly1305"
-	"github.com/AlexxIT/go2rtc/pkg/hap/hkdf"
+	"github.com/hamza-farouk/go2rtc/pkg/hap/chacha20poly1305"
+	"github.com/hamza-farouk/go2rtc/pkg/hap/hkdf"
 )
 
 type Conn struct {

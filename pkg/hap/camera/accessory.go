@@ -1,8 +1,8 @@
 package camera
 
 import (
-	"github.com/AlexxIT/go2rtc/pkg/hap"
-	"github.com/AlexxIT/go2rtc/pkg/hap/tlv8"
+	"github.com/hamza-farouk/go2rtc/pkg/hap"
+	"github.com/hamza-farouk/go2rtc/pkg/hap/tlv8"
 )
 
 func NewAccessory(manuf, model, name, serial, firmware string) *hap.Accessory {

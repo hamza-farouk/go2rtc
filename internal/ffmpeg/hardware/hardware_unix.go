@@ -5,7 +5,7 @@ package hardware
 import (
 	"runtime"
 
-	"github.com/AlexxIT/go2rtc/internal/api"
+	"github.com/hamza-farouk/go2rtc/internal/api"
 )
 
 const (

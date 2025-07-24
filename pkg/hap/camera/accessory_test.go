@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/AlexxIT/go2rtc/pkg/hap"
+	"github.com/hamza-farouk/go2rtc/pkg/hap"
 	"github.com/stretchr/testify/require"
 )
 

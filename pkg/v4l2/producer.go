@@ -7,9 +7,9 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/AlexxIT/go2rtc/pkg/core"
-	"github.com/AlexxIT/go2rtc/pkg/h264/annexb"
-	"github.com/AlexxIT/go2rtc/pkg/v4l2/device"
+	"github.com/hamza-farouk/go2rtc/pkg/core"
+	"github.com/hamza-farouk/go2rtc/pkg/h264/annexb"
+	"github.com/hamza-farouk/go2rtc/pkg/v4l2/device"
 	"github.com/pion/rtp"
 )
 

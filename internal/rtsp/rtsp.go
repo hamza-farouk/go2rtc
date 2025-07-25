@@ -194,11 +194,8 @@ func tcpHandler(conn *rtsp.Conn) {
 			// NEW: Check for sprop parameter forcing in query or global config
 			forceSprop := forceSpropParams || query.Get("force_sprop") == "1"
 			if forceSprop {
-				// Set a flag on the connection to force sprop parameters
-				// This would need to be implemented in the underlying rtsp package
-				if conn.SetForceSprop != nil {
-					conn.SetForceSprop(true)
-				}
+				// Set the ForceSprop field directly on the connection
+				conn.ForceSprop = true
 				log.Debug().Msg("[rtsp] forcing sprop parameters in SDP")
 			}
 

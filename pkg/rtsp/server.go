@@ -2,7 +2,6 @@ package rtsp
 
 import (
 	"bufio"
-	"encoding/base64"
 	"errors"
 	"fmt"
 	"net"

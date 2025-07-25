@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/v/go2rtc/internal/api"
+	"github.com/hamza-farouk/go2rtc/internal/api"
 	"github.com/hamza-farouk/go2rtc/pkg/core"
 )
 

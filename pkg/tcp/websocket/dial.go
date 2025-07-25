@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/AlexxIT/go2rtc/pkg/tcp"
+	"github.com/hamza-farouk/go2rtc/pkg/tcp"
 )
 
 func Dial(address string) (net.Conn, error) {

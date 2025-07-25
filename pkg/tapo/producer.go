@@ -3,8 +3,8 @@ package tapo
 import (
 	"encoding/json"
 
-	"github.com/AlexxIT/go2rtc/pkg/core"
-	"github.com/AlexxIT/go2rtc/pkg/mpegts"
+	"github.com/hamza-farouk/go2rtc/pkg/core"
+	"github.com/hamza-farouk/go2rtc/pkg/mpegts"
 )
 
 func (c *Client) GetMedias() []*core.Media {

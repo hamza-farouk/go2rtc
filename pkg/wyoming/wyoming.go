@@ -4,7 +4,7 @@ import (
 	"net"
 	"net/url"
 
-	"github.com/AlexxIT/go2rtc/pkg/core"
+	"github.com/hamza-farouk/go2rtc/pkg/core"
 )
 
 func Dial(rawURL string) (core.Producer, error) {

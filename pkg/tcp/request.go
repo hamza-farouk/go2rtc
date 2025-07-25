@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/AlexxIT/go2rtc/pkg/core"
+	"github.com/hamza-farouk/go2rtc/pkg/core"
 )
 
 // Do - http.Client with support Digest Authorization

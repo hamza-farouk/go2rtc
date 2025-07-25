@@ -7,9 +7,9 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/AlexxIT/go2rtc/pkg/core"
-	"github.com/AlexxIT/go2rtc/pkg/flv"
-	"github.com/AlexxIT/go2rtc/pkg/tcp"
+	"github.com/hamza-farouk/go2rtc/pkg/core"
+	"github.com/hamza-farouk/go2rtc/pkg/flv"
+	"github.com/hamza-farouk/go2rtc/pkg/tcp"
 )
 
 func DialPlay(rawURL string) (*flv.Producer, error) {

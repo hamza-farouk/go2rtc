@@ -7,9 +7,9 @@ import (
 	"net"
 	"sync"
 
-	"github.com/AlexxIT/go2rtc/pkg/core"
-	"github.com/AlexxIT/go2rtc/pkg/pcm"
-	"github.com/AlexxIT/go2rtc/pkg/pcm/s16le"
+	"github.com/hamza-farouk/go2rtc/pkg/core"
+	"github.com/hamza-farouk/go2rtc/pkg/pcm"
+	"github.com/hamza-farouk/go2rtc/pkg/pcm/s16le"
 	"github.com/pion/rtp"
 )
 

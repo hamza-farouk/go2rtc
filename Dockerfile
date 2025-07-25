@@ -1,5 +1,5 @@
 # Multi-stage Dockerfile optimized for GitHub Actions
-FROM --platform=$BUILDPLATFORM golang:1.21-alpine AS builder
+FROM --platform=$BUILDPLATFORM golang:1.23-alpine AS builder
 
 # Install build dependencies
 RUN apk add --no-cache git gcc musl-dev

@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/AlexxIT/go2rtc/pkg/core"
+	"github.com/hamza-farouk/go2rtc/pkg/core"
 	"github.com/pion/rtcp"
 	"github.com/pion/sdp/v3"
 )
@@ -27,10 +27,10 @@ t=0 0`
 func UnmarshalSDP(rawSDP []byte) ([]*core.Media, error) {
 	sd := &sdp.SessionDescription{}
 	if err := sd.Unmarshal(rawSDP); err != nil {
-		// fix multiple `s=` https://github.com/AlexxIT/WebRTC/issues/417
+		// fix multiple `s=` https://github.com/hamza-farouk/WebRTC/issues/417
 		rawSDP = regexp.MustCompile("\ns=[^\n]+").ReplaceAll(rawSDP, nil)
 
-		// fix broken `c=` https://github.com/AlexxIT/go2rtc/issues/1426
+		// fix broken `c=` https://github.com/hamza-farouk/go2rtc/issues/1426
 		rawSDP = regexp.MustCompile("\nc=[^\n]+").ReplaceAll(rawSDP, nil)
 
 		// fix SDP header for some cameras
@@ -59,7 +59,7 @@ func UnmarshalSDP(rawSDP []byte) ([]*core.Media, error) {
 		}
 	}
 
-	// fix buggy camera https://github.com/AlexxIT/go2rtc/issues/771
+	// fix buggy camera https://github.com/hamza-farouk/go2rtc/issues/771
 	forceDirection := sd.Origin.Username == "CV-RTSPHandler"
 
 	var medias []*core.Media
@@ -68,7 +68,7 @@ func UnmarshalSDP(rawSDP []byte) ([]*core.Media, error) {
 		media := core.UnmarshalMedia(md)
 
 		// Check buggy SDP with fmtp for H264 on another track
-		// https://github.com/AlexxIT/WebRTC/issues/419
+		// https://github.com/hamza-farouk/WebRTC/issues/419
 		for _, codec := range media.Codecs {
 			switch codec.Name {
 			case core.CodecH264:
@@ -78,7 +78,7 @@ func UnmarshalSDP(rawSDP []byte) ([]*core.Media, error) {
 			case core.CodecH265:
 				if codec.FmtpLine != "" {
 					// all three parameters are needed for a valid fmtp line
-					// https://github.com/AlexxIT/go2rtc/pull/1588
+					// https://github.com/hamza-farouk/go2rtc/pull/1588
 					if !strings.Contains(codec.FmtpLine, "sprop-vps=") ||
 						!strings.Contains(codec.FmtpLine, "sprop-sps=") ||
 						!strings.Contains(codec.FmtpLine, "sprop-pps=") {
@@ -117,7 +117,7 @@ func findFmtpLine(payloadType uint8, descriptions []*sdp.MediaDescription) strin
 // 1. Content-Base: rtsp://::ffff:192.168.1.123/onvif/profile.1/
 // 2. Content-Base: rtsp://rtsp://turret2-cam.lan:554/stream1/
 func urlParse(rawURL string) (*url.URL, error) {
-	// fix https://github.com/AlexxIT/go2rtc/issues/830
+	// fix https://github.com/hamza-farouk/go2rtc/issues/830
 	if strings.HasPrefix(rawURL, "rtsp://rtsp://") {
 		rawURL = rawURL[7:]
 	}

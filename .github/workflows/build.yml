@@ -65,8 +65,21 @@ jobs:
         GOOS: ${{ matrix.goos }}
         GOARCH: ${{ matrix.goarch }}
         GOARM: ${{ matrix.goarm }}
-        CGO_ENABLED: 0
+        CGO_ENABLED: ${{ matrix.goos == 'linux' && '1' || '0' }}
       run: |
+        # Install build dependencies for Linux builds with CGO
+        if [ "$GOOS" = "linux" ]; then
+          sudo apt-get update
+          sudo apt-get install -y gcc-multilib
+          if [ "$GOARCH" = "arm64" ]; then
+            sudo apt-get install -y gcc-aarch64-linux-gnu
+            export CC=aarch64-linux-gnu-gcc
+          elif [ "$GOARCH" = "arm" ]; then
+            sudo apt-get install -y gcc-arm-linux-gnueabihf
+            export CC=arm-linux-gnueabihf-gcc
+          fi
+        fi
+        
         # Create output directory
         mkdir -p dist
         

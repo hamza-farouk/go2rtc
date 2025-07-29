@@ -1,81 +1,105 @@
-# Multi-stage Dockerfile optimized for GitHub Actions
-FROM --platform=$BUILDPLATFORM golang:1.23-alpine AS builder
+name: Debug Docker Build
 
-# Install build dependencies
-RUN apk add --no-cache git gcc musl-dev
+on:
+  push:
+    branches: [ master, main ]
+  workflow_dispatch:
 
-# Build arguments
-ARG VERSION=dev
-ARG TARGETOS
-ARG TARGETARCH
-ARG TARGETVARIANT
+env:
+  DOCKER_REGISTRY: docker.io
+  DOCKER_IMAGE_NAME: hamzafarouk/go2rtc
 
-# Set working directory
-WORKDIR /src
+jobs:
+  # Test build locally first
+  test-build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-# Copy go mod files first for better caching
-COPY go.mod go.sum ./
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.23'
 
-# Download dependencies
-RUN go mod download
+    - name: Install build dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          gcc \
+          libc6-dev \
+          libasound2-dev \
+          pkg-config
 
-# Copy source code
-COPY . .
+    - name: Test Go build
+      run: |
+        echo "Testing Go modules..."
+        go mod download
+        go mod verify
+        
+        echo "Testing Go build..."
+        CGO_ENABLED=1 go build -v -ldflags="-s -w" -o go2rtc .
+        
+        echo "Testing binary..."
+        ./go2rtc --help || ./go2rtc -h || echo "Binary built successfully"
 
-# Build the application with cross-compilation support
-RUN CGO_ENABLED=1 \
-    GOOS=$TARGETOS \
-    GOARCH=$TARGETARCH \
-    GOARM=${TARGETVARIANT#v} \
-    go build -ldflags="-s -w -X main.version=$VERSION" -o go2rtc .
+  # Build single architecture Docker image first
+  build-single-arch:
+    runs-on: ubuntu-latest
+    needs: test-build
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-# Runtime stage
-FROM alpine:3.18
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
 
-# Install runtime dependencies
-RUN apk add --no-cache \
-    ffmpeg \
-    python3 \
-    py3-pip \
-    curl \
-    jq \
-    ca-certificates \
-    tzdata \
-    && rm -rf /var/cache/apk/*
+    - name: Build single architecture image (AMD64 only)
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        platforms: linux/amd64
+        push: false
+        tags: go2rtc:test
+        build-args: |
+          VERSION=test-$(git rev-parse --short HEAD)
 
-# Create non-root user
-RUN addgroup -g 1000 go2rtc && \
-    adduser -u 1000 -G go2rtc -s /bin/sh -D go2rtc
+  # Build and push multi-arch if single arch works
+  build-docker:
+    runs-on: ubuntu-latest
+    needs: build-single-arch
+    if: github.event_name != 'pull_request'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-# Create necessary directories
-RUN mkdir -p /config /data && \
-    chown -R go2rtc:go2rtc /config /data
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
 
-# Copy binary from builder stage
-COPY --from=builder /src/go2rtc /usr/local/bin/go2rtc
-RUN chmod +x /usr/local/bin/go2rtc
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.DOCKER_REGISTRY }}
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-# Switch to non-root user
-USER go2rtc
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}
+        tags: |
+          type=ref,event=branch
+          type=raw,value=latest,enable={{is_default_branch}}
 
-# Set working directory
-WORKDIR /config
-
-# Expose ports
-EXPOSE 1984 8554 8555/tcp 8555/udp
-
-# Environment variables
-ENV GO2RTC_CONFIG=/config/go2rtc.yaml
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-    CMD curl -f http://localhost:1984/api/info || exit 1
-
-# Labels for better metadata
-LABEL org.opencontainers.image.title="go2rtc" \
-      org.opencontainers.image.description="Ultimate camera streaming application" \
-      org.opencontainers.image.source="https://github.com/hamza-farouk/go2rtc" \
-      org.opencontainers.image.documentation="https://github.com/hamza-farouk/go2rtc#readme"
-
-# Default command
-CMD ["go2rtc"]
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        platforms: linux/amd64
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        build-args: |
+          VERSION=${{ steps.meta.outputs.version }}

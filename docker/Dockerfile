@@ -23,7 +23,7 @@ RUN go mod download
 COPY . .
 
 # Build the application with cross-compilation support
-RUN CGO_ENABLED=1 \
+RUN CGO_ENABLED=0 \
     GOOS=$TARGETOS \
     GOARCH=$TARGETARCH \
     GOARM=${TARGETVARIANT#v} \
